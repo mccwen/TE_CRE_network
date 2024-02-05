@@ -1,0 +1,5 @@
+The workflow of the pipeline include the following steps:
+1. Node identification
+2. Edge quantification
+3. Network formulation
+4. TE intersection with enhancer sequences of the network
