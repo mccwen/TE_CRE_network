@@ -1,0 +1,7 @@
+Design document
+
+The workfolow of the pipeline include the following:
+1) Node identification
+2) Edge quantification
+3) Network formulation
+4) TE intersection with enhancer sequences in the network
