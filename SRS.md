@@ -1,4 +1,4 @@
-＊＊1. Introduction:
+＊＊1. Introduction:**
    
    1.1 Purpose: The objecitve of this tool is to determine transposable element (TE) invovlvement in the enhancer networks of interest at single-cell resolution
    
@@ -13,7 +13,7 @@
    
       iii) Zu, S., et al. Single-cell analysis of chromatin accessibility in the adult mouse brain. Nature 2023; 624(7991):378-389. doi: 10.1038/s41586-023-06824-9
    
-＊＊2. Overall Description:
+＊＊2. Overall Description:**
    
    2.1 Product perspective: This tool will take fragments of target enhancers and a species-specific TE concesus, such as mm10 for mouse data from Dfam (see reference 1 above) as input, and output a cell-by-TE count matrix.
       i) System Interfaces ???
@@ -32,7 +32,7 @@
    
    2.5 Constraints, assumptions and dependencies: The tool uses the default parameter of bedtools (i.e., a minimum of 1 base pair overlap between a TE and a CRE seruqneces) to define TE-deriven  CRE. Nevertheless, users can change this as they see fit. To do so, please consult bedtools documentation (https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) for detailed instructions
    
-＊＊3. Requirements:
+＊＊3. Requirements:**
    
    -Functional: Using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
    -Nonfunctional: Scalabiloty should be considered, such as parallel computing, to facilite procesisng on mulitple samples (futuer task) 
