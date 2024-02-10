@@ -1,5 +1,4 @@
 **1. Introduction:**
-   
 * 1.1 Purpose:* The objecitve of this tool is to determine transposable element (TE) invovlvement in the enhancer networks of interest at single-cell resolution
    
 * 1.2 Product Scope:* This tool is designed to quantify TE activity in target open chromatins using the single-nucleus assay for transposase-accessible chromatin with sequencing (snATAC-Seq).
@@ -35,5 +34,7 @@
 **3. Requirements:**
    
    *3.1 Functional:* Using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
+   
    *3.2 Nonfunctional:* Scalabiloty should be considered, such as parallel computing, to facilite procesisng on mulitple samples (futuer task) 
-3.3 Interfaces:* Python modules or jupyternotebook
+   
+   *3.3 Interfaces:* Python modules or jupyternotebook
