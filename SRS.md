@@ -34,7 +34,7 @@
    
 **3. Requirements:**
    
-   *3.1 Functional:* Using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
+   *3.1 Functional:* i) the input file should be in bed or tsv format and include chromosome, start, and end columns, ii) to run the tool using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
    
    *3.2 Nonfunctional:* Scalabiloty should be considered, such as parallel computing, to facilite procesisng on mulitple samples (futuer task) 
    
