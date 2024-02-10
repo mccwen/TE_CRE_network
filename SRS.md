@@ -22,9 +22,9 @@
       iv) Software interfaces: Python (current development) and R (for future add-on functions)
       v) Memory constraints: >= 84 GB
    
-   (*2.2 Design constraints*
+   ~~(*2.2 Design constraints*
         Operations
-        Site adaptation requirements)
+        Site adaptation requirements)~~
    
    *2.3 Product functions:* To streamline the quantification of TE involvement in open chromatins.
    
