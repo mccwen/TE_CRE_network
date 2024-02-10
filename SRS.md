@@ -2,7 +2,7 @@
    
 _ 1.1 Purpose:_ The objecitve of this tool is to determine transposable element (TE) invovlvement in the enhancer networks of interest at single-cell resolution
    
-_ _ 1.2 Product Scope:_ _ This tool is designed to quantify TE activity in target open chromatins using the single-nucleus assay for transposase-accessible chromatin with sequencing (snATAC-Seq).
+_ 1.2 Product Scope:_ This tool is designed to quantify TE activity in target open chromatins using the single-nucleus assay for transposase-accessible chromatin with sequencing (snATAC-Seq).
    Although it can also be used for bulk-seq data, the tool development is primary with cell type specific TE-enhancer relationships in mind.
    
    __1.3 References:__ Interested readers can check out the following publications on TEs or cell type-specific TEs:
