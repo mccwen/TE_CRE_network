@@ -15,25 +15,25 @@
    
 **2. Overall Description:**
    
-   __2.1 Product perspective:__ This tool will take fragments of target enhancers and a species-specific TE concesus, such as mm10 for mouse data from Dfam (see reference 1 above) as input, and output a cell-by-TE count matrix.
+   *2.1 Product perspective:* This tool will take fragments of target enhancers and a species-specific TE concesus, such as mm10 for mouse data from Dfam (see reference 1 above) as input, and output a cell-by-TE count matrix.
       i) System Interfaces ???
       ii) User interfaces: None
       iii) Hardware interfaces: CPU
       iv) Software interfaces: Python (current development) and R (for future add-on functions)
       v) Memory constraints: >= 84 GB
    
-   (2.2 Design constraints
+   (*2.2 Design constraints*
         Operations
         Site adaptation requirements)
    
-   __2.3 Product functions:__ To streamline the quantification of TE involvement in open chromatins.
+   *2.3 Product functions:* To streamline the quantification of TE involvement in open chromatins.
    
-   __2.4 User characteristics:__ Anyone interested in characterizing cell-specific TE-CREs
+   *2.4 User characteristics:* Anyone interested in characterizing cell-specific TE-CREs
    
    2.5 Constraints, assumptions and dependencies: The tool uses the default parameter of bedtools (i.e., a minimum of 1 base pair overlap between a TE and a CRE seruqneces) to define TE-deriven  CRE. Nevertheless, users can change this as they see fit. To do so, please consult bedtools documentation (https://bedtools.readthedocs.io/en/latest/content/tools/intersect.html) for detailed instructions
    
 **3. Requirements:**
    
-   __3.1 Functional:__ Using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
-   __3.2 Nonfunctional:__ Scalabiloty should be considered, such as parallel computing, to facilite procesisng on mulitple samples (futuer task) 
-   __3.3 Interfaces:__ Python modules or jupyternotebook
+   *3.1 Functional:* Using Python (version >= 3.4) packages, including pandas, scipy, numpy, and pybedtools, to construct functions for cell-by-TE count matrices   
+   *3.2 Nonfunctional:* Scalabiloty should be considered, such as parallel computing, to facilite procesisng on mulitple samples (futuer task) 
+3.3 Interfaces:* Python modules or jupyternotebook
