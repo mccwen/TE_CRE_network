@@ -2,12 +2,14 @@ Activity 1: Set up a gitHub repository
 • Task 1.1: Create a new repository
 • Task 1.2: Create the repo basic structure
 
-Activity 2: Design workflow
-• Activity 2.1 : Decide input and output file formats
-  - Task 2.1.1: Identify a testing dataset 
+Activity 2: Design the tentative workflow
+• Activity 2.1 : Input
+  - Task 2.1.1: Decide the input data format
+  - Task 2.1.2: Identify a testing dataset 
+  - Task 2.1.3: Determine the source for TE consensus annotations
 
-• Activity 2.2: Code for TE-CRE quantification 
-• Task 2.2.1: Determine the TE consensus annotation source
-• Task 2.2.2: 
-• Task 2.2.3: Define save output function
-• Activity 2.3: Finishing the interior
+• Activity 2.2: Output
+  - Task 2.2.1: Decide the output/ resulting format
+  _ Task 2.2.2: Store results to a 10X Genomics like output folder
+
+• Activity 3: Python script for TE-CRE quantification
