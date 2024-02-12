@@ -1,13 +1,13 @@
-Work breakdown structure document:
-Activity 1: Set up GitHub repository
-• Task 1.1: Pull Steamer to my current TE github
-• Task 1.3: Create code structure
-Activity 2: Build prototype
-• Activity 2.1 : Refine design to describe tasks
-• Task 2.1.1: Break project into activities
-• Task 2.1.2: Break project into tasks
-• Activity 2.2: Define high-level functions
-• Task 2.2.1: Define read/create data function
-• Task 2.2.2: Define analysis function
+Activity 1: Set up a gitHub repository
+• Task 1.1: Create a new repository
+• Task 1.2: Create the repo basic structure
+
+Activity 2: Design workflow
+• Activity 2.1 : Decide input and output file formats
+  - Task 2.1.1: Identify a testing dataset 
+
+• Activity 2.2: Code for TE-CRE quantification 
+• Task 2.2.1: Determine the TE consensus annotation source
+• Task 2.2.2: 
 • Task 2.2.3: Define save output function
 • Activity 2.3: Finishing the interior
