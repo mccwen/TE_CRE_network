@@ -12,7 +12,7 @@ Purpose:* The objecitve of this tool is to streamline the quantification of TE i
    
 **3. Requirements:**
    
-   *3.1 Functional:* Run steamer.py to get a cell-by-TE matricx
+   *3.1 Functional:* Run steamer.py to get a cell-by-TE matrix
    
    *3.2 Useability:* Terminal to run the python module
    
