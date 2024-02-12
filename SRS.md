@@ -1,6 +1,6 @@
 **1. Introduction:**
 
-Purpose:* The objecitve of this tool is to streamline the quantification of TE involvement in open chromatins, specifically at single-cell resolution.
+* Purpose: * The objecitve of this tool is to streamline the quantification of TE involvement in open chromatins, specifically at single-cell resolution.
    
 **2. Overall Description:**
    
