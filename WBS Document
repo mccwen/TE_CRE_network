@@ -12,4 +12,8 @@ Activity 2: Design the tentative prototype
   - Task 2.2.1: Decide the output/ resulting format
   _ Task 2.2.2: Store results to a 10X Genomics like output folder
 
-• Activity 3: Python script for TE-CRE quantification
+• Activity 2.3: Write a Python script for TE-CRE quantification
+  - Task 2.3.1: First function for taking the two input files
+  - Task 2.3.2: Second function for converting the input files to bed format
+  - Task 2.3.3: Third function for using bedtools to intsect TE sequences and ATAC fragments
+  - Task 2.3.4: Fourth function for convert the output to a 10X Genomics output folder 
