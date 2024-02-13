@@ -12,6 +12,6 @@ Activity 2: Design the tentative prototype
   - Task 2.2.1: Decide the output/ resulting format
 
 • Activity 2.3: Write a Python script for TE-CRE quantification for single-cell ATAC data
-  - Task 2.3.1: First function for taking the two input files
-  - Task 2.3.2: Second function for converting the input files to bed format
-  - Task 2.3.3: Third function for using bedtools to intersect TE sequences and ATAC fragments and store the results in a cell-by-TE matrix
+  - Task 2.3.1: First function to take the two input files
+  - Task 2.3.2: Second function to convert the input files to bed format
+  - Task 2.3.3: Third function to use bedtools to intersect TE sequences and ATAC fragments and store the results in a cell-by-TE matrix
