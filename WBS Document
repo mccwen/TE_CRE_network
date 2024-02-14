@@ -6,7 +6,8 @@ Activity 2: Design the tentative prototype
 • Activity 2.1 : Input
   - Task 2.1.1: Decide the input data format
   - Task 2.1.2: Identify a testing dataset 
-  - Task 2.1.3: Determine the source for TE consensus annotations
+  - Task 2.1.3: Determine the source for TE consensus annotations (e.g., Dfam, RepeatMasker)
+  - Task 2.1.4: Determine the input data (e.g., 10X Genomics)
 
 • Activity 2.2: Output
   - Task 2.2.1: Decide the output/ resulting format
