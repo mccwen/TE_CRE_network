@@ -1,0 +1,17 @@
+Activity 1: Set up a gitHub repository
+• Task 1.1: Create a new repository
+• Task 1.2: Create the repo basic structure
+
+Activity 2: Design the tentative prototype
+• Activity 2.1 : Input
+  - Task 2.1.1: Decide the input data format
+  - Task 2.1.2: Identify a testing dataset 
+  - Task 2.1.3: Determine the source for TE consensus annotations
+
+• Activity 2.2: Output
+  - Task 2.2.1: Decide the output/ resulting format
+
+• Activity 2.3: Write a Python script for TE-CRE quantification for single-cell ATAC data
+  - Task 2.3.1: First function to take the two input files
+  - Task 2.3.2: Second function to convert the input files to bed format
+  - Task 2.3.3: Third function to use bedtools to intersect TE sequences and ATAC fragments and store the results in a cell-by-TE matrix
