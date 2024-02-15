@@ -2,14 +2,13 @@
 requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
-requires-python = ">= 3.8"
 [project]
-name = "TE-CRE Network"
+name = "steamer"
 version = "0.0.1"
 authors = [
   { name="Crystal Wen", email="mccwen@umich.edu" },
 ]
-description = "A small example package"
+description = "steamer package"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -18,3 +17,6 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.setuptools]
+packages = ["steamer"]
+py-modules = ["__init__"] # dash, not underscore
