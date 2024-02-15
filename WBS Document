@@ -16,9 +16,10 @@ Activity 3: Design and write unittest
   - Task 3.1: Design unitest
   - Task 3.2: Write unitest
 
-• Activity 4: Write a Python script for TE-CRE quantification for single-cell ATAC data
-  - Task 4.1: First function to take the two input files
-  - Task 4.2: Second function to convert the input files to bed format
-  - Task 4.3: Third function to use bedtools to intersect TE sequences and ATAC fragments and store the results in a cell-by-TE matrix
+• Activity 4: Write a Python script for each function to achieve TE-CRE quantification 
+  - Task 4.1: First function to convert the TE annotation file to a bed file
+  - Task 4.2: Second function to convert the input fragment file to bed format
+  - Task 4.3: Third function to use bedtools to intersect TE sequences and ATAC fragments 
+  - Task 4.4: Fourth function to store the results in a cell-by-TE matrix
 
 
