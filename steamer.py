@@ -104,6 +104,7 @@ def make_cell_x_element_matrix(bed_interesect, TE_fams, cell_barcodes):
         sparse_matrix: scipy.sparse matrix, matrix with rows corresponding to cell barcodes and columns corresponding to TE families
     """
     counts = {}
+    # To iterate each row in the intsersected file and add 1 count if there is one overlap 
     for interval in bed_interesect:
         fam_name = interval.name
         barcode = interval.fields[8]
@@ -111,7 +112,8 @@ def make_cell_x_element_matrix(bed_interesect, TE_fams, cell_barcodes):
             counts[(barcode, fam_name)] += 1
         except KeyError as e:
             counts[(barcode, fam_name)] = 1
-                
+
+    # use barcode as row index and TE family names as column names
     row_inds = []
     col_inds = []
     data = []
@@ -119,5 +121,6 @@ def make_cell_x_element_matrix(bed_interesect, TE_fams, cell_barcodes):
         row_inds.append(np.where(cell_barcodes == barcode)[0][0])
         col_inds.append(np.where(TE_fams == fam_name)[0][0])
         data.append(count)
+    # Convert to a sparse matrix since the count matrix is full of 0s.
     sparse_matrix = csr_matrix((data, (row_inds, col_inds)), shape=(len(cell_barcodes), len(TE_fams)))
     return sparse_matrix
