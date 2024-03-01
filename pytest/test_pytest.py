@@ -63,15 +63,7 @@ def test_bed_for_TEs(define_TE_chromosome_names):
 # The same check for the input sample file
 def test_bed_for_fragments(define_sample_chromosome_names):
 	assert define_sample_chromosome_names in chroms
-"""	
-	# filename should be a fragment file that contains info such as chromosome name, start, end positions and barcode
-	sample_df=pd.read_csv(filename)
-	chrom_names=sample_df.iloc[:, 0]
-	for name in chrom_names:
-		if name not in chroms:
-			raise ValueError(name + ' is a wrong chromosome name!')
 
-"""
 
 
 
