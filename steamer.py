@@ -26,10 +26,11 @@ def create_bed_for_TEs(filename):
     col_names = ["seq_name","ali-st","ali-en"]
     other_col = ['family_name','strand']
     #nrows set to 1000 for testing
-    #only taking the columns with the col_names specified
+    #Below we only take columns as specified in col_names in the input file and thus columns 0, 9, and 10 are extracted
     TE_df = pd.read_csv(filename,sep='\t',usecols=[0,9,10], names=col_names)
     TE_df=TE_df.loc[1:]
     
+    # Similarly, we will need "family_name" and "strand" later; both are in columns 2 & 8 in the input file
     strand_name_df =pd.read_csv(filename,sep='\t',usecols=[2,8], names= other_col)
     strand_name_df=strand_name_df.loc[1:]
      
