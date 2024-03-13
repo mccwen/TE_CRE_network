@@ -26,7 +26,7 @@ jobs:
       - name: List
         run: |
             echo "listing files in the bioinitio directory"
-            ls Design documents
+            ls "Design documents"
       # a custom step that runs R code
       - name: Greet
         run: print("Hello, world!")
