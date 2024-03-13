@@ -1,6 +1,7 @@
 import pytest
 import sys
-sys.path.append('..')
+sys.path.append("./steamer")
+#sys.path.append('..')
 #sys.path.insert(0, '..')
 import steamer as st
 
