@@ -1,14 +1,14 @@
-name: CI
+name: CI_test
 
 on:
   push:
     branches:
       - main
-      - CI
+    
   pull_request:
     branches:
       - main
-      - CI
+     
 
 jobs:
   build:
