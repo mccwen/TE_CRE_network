@@ -64,8 +64,8 @@ def create_bed_for_fragments(filename,quality_barcode_file=''):
     """
     
     col_names = ["Chromosome", "Start", "End", "barcode"]
-    #frag_df = pd.read_csv(filename, sep="\t", usecols=[0, 1, 2, 3], names=col_names)
-    frag_df = pd.read_csv(filename, sep=",", usecols=[0, 1, 2, 3], names=col_names)
+    frag_df = pd.read_csv(filename, sep="\t", usecols=[0, 1, 2, 3], names=col_names)
+    #frag_df = pd.read_csv(filename, sep=",", usecols=[0, 1, 2, 3], names=col_names)
     frag_df=frag_df.loc[1:]
     #frag_df = pd.read_csv(filename, sep=",", usecols=[0, 1, 2, 3])
     if quality_barcode_file == '' :
