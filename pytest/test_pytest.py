@@ -1,6 +1,6 @@
 import pytest
 import sys
-sys.path.insert('../')
+sys.path.insert(0, '..')
 import steamer as st
 
 import pandas as pd
