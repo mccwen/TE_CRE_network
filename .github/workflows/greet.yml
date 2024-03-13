@@ -6,11 +6,11 @@ on:
   push:
     branches:
       - main
-      - master
+      - CI
   pull_request:
     branches:
       - main
-      - master
+      - CI
 
 # independent jobs in the workflow
 jobs:
