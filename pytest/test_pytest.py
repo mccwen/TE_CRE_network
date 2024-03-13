@@ -1,6 +1,7 @@
 import pytest
 import sys
-from .. import steamer as st
+sys.path.insert(1, '../')
+import steamer as st
 import pandas as pd
 #from pybedtools import BedTool
 from fuc import pybed
