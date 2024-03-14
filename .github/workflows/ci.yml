@@ -27,5 +27,6 @@ jobs:
             pip install -r requirements.txt
         fi
     - name: Test with pytest
+    pip install -e .
       run: |
         pytest .
