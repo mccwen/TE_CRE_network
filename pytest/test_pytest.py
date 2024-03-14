@@ -2,11 +2,8 @@ import pytest
 import sys
  
 # setting path
-sys.path.append('../')
- 
-# importing
-from .. import steamer
-#import steamer as st
+sys.path.append('..')
+import steamer as st
 import pandas as pd
 #from pybedtools import BedTool
 from fuc import pybed
@@ -28,7 +25,7 @@ def test_create_bed_for_fragments():
 	expected_result=pd.read_csv("test_data/test_sample.bed", sep="\t")
 	expected_bf=pybed.BedFrame.from_frame(meta=[], data=expected_result)
 	#expected_bf = pybed.BedFrame.from_frame([],expected_result)
-	assert result.to_string()==expected_bf.to_string()
+	assert result.to_string()==expected_bf.to_string(), "The sample file does not match the sample bed file."
 
 
 # Test the final function in steamer to ensure the sizes of TE names and of cell barcode match those in Bedtool object
