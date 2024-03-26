@@ -49,13 +49,15 @@ cicero_cds <- make_cicero_cds(input_cds, reduced_coordinates = umap_coords)
 data("mouse.mm9.genome")
 
 # use only a small part of the genome for testing purposes
+# Also, specify the chromosome where the target gene (e.g., chromosome 3 for Macrod) locates
 sample_genome <- subset(mouse.mm9.genome, V1 == "chr2")
-sample_genome$V2[1] <- 10000000
 
-## Usually use the whole mouse.mm9.genome ##
-## Usually run with sample_num = 100 ##
+# run on 2 samples 
 conns <- run_cicero(cicero_cds, sample_genome, sample_num = 2) 
-head(conns)
-# Use all data for real
-conns <- run_cicero(cicero_cds, mouse.mm9.genome, sample_num = 2) 
+conns_sub <- conns[conns$coaccess >=0.2, ]
+# Select peaks with coaccessibility score above 0.2 and save the data
+write.csv(conns_sub, "chr2_coaccess_gt0.2.csv", row.names=FALSE)
+
+# Use all data of 100 samples for real
+# conns <- run_cicero(cicero_cds, mouse.mm9.genome, sample_num = 100) 
 
