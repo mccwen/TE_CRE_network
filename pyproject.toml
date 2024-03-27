@@ -3,12 +3,12 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "steamer"
+name = "TE_CRE_network"
 version = "0.0.1"
 authors = [
   { name="Crystal Wen", email="mccwen@umich.edu" },
 ]
-description = "steamer package"
+description = "TE_CRE_network package"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -18,5 +18,5 @@ classifiers = [
 ]
 
 [tool.setuptools]
-packages = ["steamer"]
-py-modules = ["__init__"] # dash, not underscore
+packages = ["TE_CRE_network"]
+py-modules = ["steamer_enhancer"] # dash, not underscore
