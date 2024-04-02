@@ -1,5 +1,5 @@
 The workflow of the pipeline include the following steps:
-1. Node identification
-2. Edge quantification
+1. Calculating co-accessibility between enhancers of a given gene
+2. Formulating a network of signihifcantly correlated enhancers of a target gene
 3. Network formulation
-4. TE intersection with enhancer sequences of the network
+4. TE intersection with significant enhancer sequences of the target gene
