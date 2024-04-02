@@ -3,6 +3,8 @@
 1. Steamer
 The core of the this pipeline is _steamer_ which was developed by the Welch lab at University of Michigan and is used to qnautification of TE counts per cell.
 
+The example here is to use a mouse TE annotation database which can be downloaded from here: https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/. 
+
 The pipeline, _steamer_,  takes two input files: 1) fragmemt.tsv from single nucleus ATAC-seq and 2) annotated TE sequences in any text format. It outputs a cell-by-TE count matrix.
 
-2. Enhancer network (coming up soon)
+2. Enhancer co-accessibility
