@@ -26,6 +26,7 @@ Activity 3: Design and write unittest
   - Task 5.1: Select a target gene
   - Task 5.2: Find significant enhancers of the target gene using a 500kb sliding window
   - Task 5.3: Compute correlations between significant enhancers of the target gene using Cicero
+  - Task 5.4: Write a python function to take the output from Task 5.3 to sort the column names in order to run Task 5.5
   - Task 5.5: Using the TE-CRE quantification script (see Activity 4) to intersect significant enhancers with TE sequences
 
 
