@@ -22,9 +22,9 @@ Activity 3: Design and write unittest
   - Task 4.3: Third function to use bedtools to intersect TE sequences and ATAC fragments 
   - Task 4.4: Fourth function to store the results in a cell-by-TE matrix
 
-• Activity 5: Write a R script for constructing an enhancer network 
+• Activity 5: Write a R script for constructing enhancer co-accessibility scores for a target gene
   - Task 5.1: Select a target gene
-  - Task 5.2: Find significant enhancers of the target gene using XGBoost regression
+  - Task 5.2: Find significant enhancers of the target gene using a 500kb sliding window
   - Task 5.3: Compute correlations between significant enhancers of the target gene using Cicero
   - Task 5.4: Network analysis
   - Task 5.5: Using the TE-CRE quantification script (see Activity 4) to intersect significant enhancers with TE sequences
