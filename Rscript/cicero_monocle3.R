@@ -60,7 +60,7 @@ sample_genome <- subset(mouse.mm9.genome, V1 == "chr2")
 conns <- run_cicero(cicero_cds, sample_genome, sample_num = 2)
 conns_sub <- conns[conns$coaccess >=0.2, ]
 # Select peaks with co-accessibility score above 0.2 and save the data
-write.csv(conns_sub, "chr2_coaccess_gt0.2.csv", row.names=FALSE)
+write.csv(conns_sub, "cexample_data/hr2_coaccess_gt0.2.csv", row.names=FALSE)
 
 # Use all data of 100 samples for real
 # conns <- run_cicero(cicero_cds, mouse.mm9.genome, sample_num = 100)
