@@ -1,14 +1,18 @@
 #This module was primarily developed by and taken from the Welch lab with some modifications
-
 import pandas as pd
 import numpy as np
+import random
 from pybedtools import BedTool
 import scipy.sparse
 from fuc import pybed
+from scipy.io import mmwrite
 from scipy.sparse import csr_matrix
 from scipy.sparse import coo_matrix
+from collections import defaultdict
 import os
 import glob
+import csv
+import gzip
 
 
 def create_bed_for_TEs(filename): 
@@ -51,26 +55,53 @@ def create_bed_for_TEs(filename):
     TE_bed_file = bf.to_file('TEs.bed')
     return bf
 
+def get_enhancers(file):    
+    # Load the data into a DataFrame
+    df = pd.read_csv(file, sep=',')
+    # Split each pair of peaks into two sets of separate columns
+    peaks_split = df['Peak1'].str.split('-', expand=True)
+    chr = peaks_split[0].str.split(':', expand=True)[0]
+    start_position = peaks_split[0].str.split(':', expand=True)[1]
+    end_position = peaks_split[1]
+    # peaks_split.columns = ['Peak1_start', 'Peak1_end']
 
-def create_bed_for_enhancers(filename):
-    """
-    Takes in a file (ideally a fragment file) and converts it into a BED file.
-    
-    Args:
-        filename: str, filepath to the input file 
-        
-    Returns:
-        bf: pybed.BedFrame object (and creating the Fragment bed file)
-    """
-    
-    frag_df = pd.read_csv(filename)
-    cell_barcode=frag_df["barcode"]
-    
-    bf = pybed.BedFrame.from_frame(meta=[], data=frag_df)
-    bf=bf.sort()
-    bf.to_file("Enhancer.bed")
-    return bf
+    peaks_split2 = df['Peak2'].str.split('-', expand=True)
+    chr2 = peaks_split2[0].str.split(':', expand=True)[0]
+    start_position2 = peaks_split2[0].str.split(':', expand=True)[1]
+    end_position2 = peaks_split2[1]
 
+    # Vertically concatenate the two sets of columns
+    new_df = pd.DataFrame({
+        'chr': pd.concat([chr, chr2], ignore_index=True),
+        'start_position': pd.concat([start_position, start_position2], ignore_index=True),
+        'end_position': pd.concat([end_position, end_position2], ignore_index=True)
+    })
+    new_df['start_position'] = new_df['start_position'].astype(int)
+    new_df['end_position'] = new_df['end_position'].astype(int)
+    return new_df
+
+def get_nearby_enhancers(df,start_position,end_position):
+    filtered_index = (df['start_position'] > start_position - 500000) & (df['end_position'] < end_position + 500000)
+    enhancer = df[filtered_index]
+    # Gnerate random barcode
+    def generate_barcode():
+        return ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k=10))
+    # Create a new DataFrame with the required columns
+    bed_df = pd.DataFrame({
+        'Chromosome': enhancer['chr'],
+        'Start': enhancer['start_position'],
+        'End': enhancer['end_position'],
+        'Barcode': [generate_barcode() for _ in range(len(enhancer))]
+    })
+    barcode=bed_df["Barcode"]
+    # Reorder columns to match the BED format
+    bed_df = bed_df[['Chromosome', 'Start', 'End', 'Barcode']]
+    barcode=bed_df["Barcode"]
+    bed_df=pybed.BedFrame.from_frame(meta=[], data=bed_df)
+    bed_df=bed_df.sort()
+    bed_df.to_file('Frag.bed')
+    
+    return bed_df, barcode
 
 def intersection(TE_bed, frag_bed):
     """
@@ -80,9 +111,9 @@ def intersection(TE_bed, frag_bed):
     The output file is another bed file.
 
     """
-    bed_intersect=TE_bed.intersect(frags_bed, wb=True, sorted=True)
+    bed_intersect=TE_bed.intersect(frag_bed, wb=True, sorted=True)
     return bed_intersect
-
+    #return TE_bed, frag_bed
 
 def make_cell_x_element_matrix(bed_intersect, cell_barcodes):
     # Initialize lists and dictionaries
@@ -125,4 +156,83 @@ def make_cell_x_element_matrix(bed_intersect, cell_barcodes):
     TE_Fams_sparse_df = TE_Fams_sparse_df.groupby(['barcode_index', 'FamTE_index'], as_index=False)['data'].sum()
     # Return the DataFrames and dictionaries
     return (UniqueTEs_sparse_df, TE_Fams_sparse_df, dict(unique_TEs_list), dict(TEs_fam_dict), barcode_dict)
+
+def convert_cell_x_element_matrix_to_file(matrix, col, rows,filename='Cell_x_Element_Matrix.csv'):
+    '''
+    Converts a scipy sparse matrix into a CSV file.
+
+    Args:
+        matrix (csr_matrix): The input matrix to convert.
+        col (list): A list of column labels for the output CSV file.
+        rows (list): A list of row labels for the output CSV file.
+
+    Returns:
+        None
+    '''
+    df = pd.DataFrame.sparse.from_spmatrix(matrix, columns=col,index = rows)
+    df.to_csv(filename)
+
+def save_df_as_gz(df, filename):
+    # Save the DataFrame as a gzipped file
+    with gzip.open(filename, 'wt', encoding='utf-8') as gz_file:
+        df.to_csv(gz_file, sep='\t', index=False, header=False)
+
+
+def prepare_df(df):
+    'Swaps the barcodes and TE column indexes to prepare for scanpy.'
+    df[df.columns[0]], df[df.columns[1]] = df[df.columns[1]], df[df.columns[0]]
+    return df
+
+
+def convert_df_to_sparse(df):
+    ''
+    df = prepare_df(df)
+    array = df.values
+    rows = [val[0] for val in array]
+    columns = [val[1] for val in array]
+    values = [val[2] for val in array]
+    csr_mat = csr_matrix((values, (rows, columns)))
+    return csr_mat
+
+def compress_tsv_file(file_path, output_dir,barcode_dict):
+    '''
+    Takes in a file_path,out_dir, and the barcodes to make a .gzip .tsv file
+    '''
+    # Create the output file path
+    output_file_path = os.path.join(output_dir, f'{os.path.basename(file_path)}.gz')
+    # Write the TSV file
+    with open(file_path, 'w', newline='') as tsv_file:
+        writer = csv.writer(tsv_file, delimiter='\t')
+        for barcode in barcode_dict.keys():
+            writer.writerow([barcode])
+    # Compress the TSV file to gzip format
+    with open(file_path, 'rb') as f_in, gzip.open(output_file_path, 'wb') as f_out:
+        f_out.writelines(f_in)
+    # Remove the original TSV file
+    os.remove(file_path)
+
+def make_features_df(TE_dict):
+    # Convert TEs_fams dictionary to a DataFrame
+    fams_df = pd.DataFrame(list(TE_dict.items()), columns=['TE_Name', 'idx'])
+    # Drop the 'idx' column
+    fams_df.drop('idx', axis=1, inplace=True)
+    # Move the 'pseudoID' column to the first position
+    fams_df.insert(0, 'pseudoID', fams_df['TE_Name'])
+    # Add the 'expression' column
+    fams_df['expression'] = ['Gene Expression'] * len(TE_dict)
+    return fams_df
+
+def compress_sparse_matrix(matrix, file_path):
+    # Save the sparse matrix in Matrix Market format to a temporary uncompressed file
+    mmwrite(file_path,matrix)
+    # Compress the file using gzip
+    with open(file_path, 'rb') as f_in:
+        with gzip.open(file_path + '.gz', 'wb') as f_out:
+            f_out.writelines(f_in)
+    
+    # Remove the temporary uncompressed file
+    os.remove(file_path)
+
+
+
 
