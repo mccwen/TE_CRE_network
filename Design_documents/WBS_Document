@@ -16,18 +16,25 @@ Activity 3: Design and write unittest
   - Task 3.1: Design unitest
   - Task 3.2: Write unitest
 
-• Activity 4: Write a Python script for each function to achieve TE-CRE quantification 
-  - Task 4.1: First function to convert the TE annotation file to a bed file
-  - Task 4.2: Second function to convert the input fragment file to bed format
-  - Task 4.3: Third function to use bedtools to intersect TE sequences and ATAC fragments 
-  - Task 4.4: Fourth function to store the results in a cell-by-TE matrix
+• Activity 4: Write a R script for constructing enhancer co-accessibility scores for a target gene
+  - Task 4.1: Select a target gene
+  - Task 4.2: Find significant enhancers of the target gene using a 500kb sliding window
+  - Task 4.3: Compute correlations between significant enhancers of the target gene using Cicero
+  - Task 4.4: Write a python function to take the output from Task 5.3 to sort the column names in order to run Task 5.5
+  - Task 4.5: Using the TE-CRE quantification script (see Activity 4) to intersect significant enhancers with TE sequences
 
-• Activity 5: Write a R script for constructing enhancer co-accessibility scores for a target gene
-  - Task 5.1: Select a target gene
-  - Task 5.2: Find significant enhancers of the target gene using a 500kb sliding window
-  - Task 5.3: Compute correlations between significant enhancers of the target gene using Cicero
-  - Task 5.4: Write a python function to take the output from Task 5.3 to sort the column names in order to run Task 5.5
-  - Task 5.5: Using the TE-CRE quantification script (see Activity 4) to intersect significant enhancers with TE sequences
+• Activity 5: Write a Python script to construct a netwokr of highly correlated enhancers (subset of the output from Activity 4)
+  - Task 5.1: A function to i) take the coaccess matrix as input, subset the matrix to get highly correlated enhancers, construct a network , 
+and plot the network
+
+• Activity 6: Write a Python script for each function to achieve TE-CRE quantification 
+  - Task 6.1: First function to convert the TE annotation file to a bed file
+  - Task 6.2: Second function to read in the significant enhacer data 
+  - Task 6.3: Third function to subset the sginificanltly correlated nearby enhancers of the target gene and convert the dataframe to bed format
+  - Task 6.4: Fourth function to use bedtools to intersect TE sequences and ATAC fragments 
+  - Task 6.5: Fifth function to compute a cell-by-TE count matrix
+  - Task 6.6: Sixh function to save the count matrix to csv file
+  - Task 6.7: 7th~12th functions to save the count matrix to 10x-type formats 
 
 
 
