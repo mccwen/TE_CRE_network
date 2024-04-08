@@ -9,3 +9,5 @@ The first part of the pipeline will need 1) and 3) to calculate co-accessibility
 
 Another input file for the second part of the pipeline is a text file of mouse TE consesnsus sequences that contains 1369 different TE families and their genomic coordinates. The TE annotation file can be downloaded from Dfam (https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/) will be another input file.
 
+Transposable elements (TEs) play a crucial role in regulating gene expression. One of the ways is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) whether these correlated enhancers are overlapped with some TEs.
+
