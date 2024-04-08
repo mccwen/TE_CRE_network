@@ -1,13 +1,14 @@
-The testing dataset is a small mouse brain single-cell multiome dataset (221.2 MB) and can be downloaded from 10X Genomics website (https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0). Key metrics of the dataset can be found on the website. The advantages of using this dataset for testing the pipeline include the relative small yet real data and the available gene and ATAC information in the same cells. 
+Transposable elements (TEs) play a crucial role in altering/regulating gene expression. One of the ways they use is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) whether these correlated enhancers are driven by TEs (i.e., overlapped with some TEs).
+
+The testing dataset is a small mouse brain single-cell multiome dataset (221.2 MB) and can be downloaded from 10X Genomics website (https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0). Key metrics of the dataset can be found on the website. The advantages of using this dataset for pipeline demostration include its relatively small size and the availablility of both gene and ATAC information in the same cells. 
 
 We will use the processed data for testing the pipeline. Information about cell barcodes, features (gene names and locations, as well as peak locations) can be found in the folder named "filtered_feature_bc_matrix". Specifically, 
-1) snATAC fragments that passed quality contorl can be found in the file named e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz that comprises 4880 cells. IQuality fragments will be one of the input.
-2) To study genes of interest, there are a total of 32245 different genes present in this dataset, which can be found in the file named "features.tsv.gz".
+1) snATAC fragments that passed quality contorl can be found in the file named e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz that comprises 4880 cells. Quality fragments will be one of the input.
+2) To study genes of interest, there are a total of 32245 different genes present in this dataset to choose from. Gene information can be found in the file named "features.tsv.gz".
 3) ATAC peak locations are stored in a file named "peaks.bed" that contains 144437 peaks and is provided on the same website also.
 
-The first part of the pipeline will need 1) and 3) to calculate co-accessibility scores between any pair of peaks (enhancers), and then use a subset of the data for testing (e.g., only looking at a gene of interest), while the second part of the pipeline will take the output from the first part to quantify TEs of these enhancers.  
+The first part of the pipeline which is a R script will need 1) and 3) to calculate co-accessibility scores between any pair of peaks (enhancers), and then use a subset of the data for testing (e.g., only looking at one or a few of genes of interest), while the second part of the pipeline will take the output from the first part and quantify TEs of these enhancers.  
 
 Another input file for the second part of the pipeline is a text file of mouse TE consesnsus sequences that contains 1369 different TE families and their genomic coordinates. The TE annotation file can be downloaded from Dfam (https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/) will be another input file.
 
-Transposable elements (TEs) play a crucial role in regulating gene expression. One of the ways is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) whether these correlated enhancers are overlapped with some TEs.
 
