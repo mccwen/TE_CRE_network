@@ -1,4 +1,4 @@
-Transposable elements (TEs) play a crucial role in altering/regulating gene expression. One of the ways they use is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) whether these correlated enhancers are driven by TEs (i.e., overlapped with some TEs).
+Transposable elements (TEs) play a crucial role in altering/regulating gene expression. One of the ways they use is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) more importantly, whether these correlated enhancers are driven by TEs (i.e., overlapped with TEs).
 
 The testing dataset is a small mouse brain single-cell multiome dataset (221.2 MB) and can be downloaded from 10X Genomics website (https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0). Key metrics of the dataset can be found on the website. The advantages of using this dataset for pipeline demostration include its relatively small size and the availablility of both gene and ATAC information in the same cells. 
 
