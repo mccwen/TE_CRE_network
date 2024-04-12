@@ -60,19 +60,19 @@ def get_enhancers(file):
     df = pd.read_csv(file, sep=',')
     # Split each pair of peaks into two sets of separate columns
     peaks_split = df['Peak1'].str.split('-', expand=True)
-    chr = peaks_split[0].str.split(':', expand=True)[0]
+    peak1_chr = peaks_split[0].str.split(':', expand=True)[0]
     start_position = peaks_split[0].str.split(':', expand=True)[1]
     end_position = peaks_split[1]
     # peaks_split.columns = ['Peak1_start', 'Peak1_end']
 
     peaks_split2 = df['Peak2'].str.split('-', expand=True)
-    chr2 = peaks_split2[0].str.split(':', expand=True)[0]
+    peak2_chr = peaks_split2[0].str.split(':', expand=True)[0]
     start_position2 = peaks_split2[0].str.split(':', expand=True)[1]
     end_position2 = peaks_split2[1]
 
     # Vertically concatenate the two sets of columns
     new_df = pd.DataFrame({
-        'chr': pd.concat([chr, chr2], ignore_index=True),
+        'chr': pd.concat([peak1_chr, peak2_chr], ignore_index=True),
         'start_position': pd.concat([start_position, start_position2], ignore_index=True),
         'end_position': pd.concat([end_position, end_position2], ignore_index=True)
     })
@@ -99,8 +99,30 @@ def get_nearby_enhancers(df,start_position,end_position):
     barcode=bed_df["Barcode"]
     bed_df=pybed.BedFrame.from_frame(meta=[], data=bed_df)
     bed_df=bed_df.sort()
+    bed_df.to_file('Frag.bed')    
+    return bed_df, barcode
+
+def get_nearby_enhancers(df,chrom, start_position,end_position):
+    df_sub=df[df["chr"]==chrom]
+    filtered_index = (df_sub['start_position'] > start_position - 500000) & (df_sub['end_position'] < end_position + 500000)
+    enhancer = df_sub[filtered_index]
+    # Gnerate random barcode
+    def generate_barcode():
+        return ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k=10))
+    # Create a new DataFrame with the required columns
+    bed_df = pd.DataFrame({
+        'Chromosome': enhancer['chr'],
+        'Start': enhancer['start_position'],
+        'End': enhancer['end_position'],
+        'Barcode': [generate_barcode() for _ in range(len(enhancer))]
+    })
+    barcode=bed_df["Barcode"]
+    # Reorder columns to match the BED format
+    bed_df = bed_df[['Chromosome', 'Start', 'End', 'Barcode']]
+    barcode=bed_df["Barcode"]
+    bed_df=pybed.BedFrame.from_frame(meta=[], data=bed_df)
+    bed_df=bed_df.sort()
     bed_df.to_file('Frag.bed')
-    
     return bed_df, barcode
 
 def intersection(TE_bed, frag_bed):
