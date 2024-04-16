@@ -12,6 +12,6 @@ def network_polt(filename, min_high_corr):
     adj=adj.reindex(index=idx, columns=idx, fill_value=0)
     plt.rc('font', size=3) 
     plt.figure(figsize=(16,13), dpi=90)
-    nx.draw_networkx(nx.from_pandas_adjacency(m))
+    nx.draw_networkx(nx.from_pandas_adjacency(adj))
     plt.savefig('highly_correlated_enhancer_network_coaccess.png')
     
