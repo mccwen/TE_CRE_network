@@ -76,31 +76,10 @@ def get_enhancers(file):
         'start_position': pd.concat([start_position, start_position2], ignore_index=True),
         'end_position': pd.concat([end_position, end_position2], ignore_index=True)
     })
+    new_df=new_df.dropna()
     new_df['start_position'] = new_df['start_position'].astype(int)
     new_df['end_position'] = new_df['end_position'].astype(int)
     return new_df
-
-def get_nearby_enhancers(df,start_position,end_position):
-    filtered_index = (df['start_position'] > start_position - 500000) & (df['end_position'] < end_position + 500000)
-    enhancer = df[filtered_index]
-    # Gnerate random barcode
-    def generate_barcode():
-        return ''.join(random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', k=10))
-    # Create a new DataFrame with the required columns
-    bed_df = pd.DataFrame({
-        'Chromosome': enhancer['chr'],
-        'Start': enhancer['start_position'],
-        'End': enhancer['end_position'],
-        'Barcode': [generate_barcode() for _ in range(len(enhancer))]
-    })
-    barcode=bed_df["Barcode"]
-    # Reorder columns to match the BED format
-    bed_df = bed_df[['Chromosome', 'Start', 'End', 'Barcode']]
-    barcode=bed_df["Barcode"]
-    bed_df=pybed.BedFrame.from_frame(meta=[], data=bed_df)
-    bed_df=bed_df.sort()
-    bed_df.to_file('Frag.bed')    
-    return bed_df, barcode
 
 def get_nearby_enhancers(df,chrom, start_position,end_position):
     df_sub=df[df["chr"]==chrom]
@@ -125,6 +104,7 @@ def get_nearby_enhancers(df,chrom, start_position,end_position):
     bed_df.to_file('Frag.bed')
     return bed_df, barcode
 
+
 def intersection(TE_bed, frag_bed):
     """
     This function takes a TE annotaiton file and a fragment file (both in .bed format) and use bedtools 
@@ -134,6 +114,7 @@ def intersection(TE_bed, frag_bed):
 
     """
     bed_intersect=TE_bed.intersect(frag_bed, wb=True, sorted=True)
+    bed_intersect=bed_intersect.sort().saveas('intersected_bed.bed')
     return bed_intersect
     #return TE_bed, frag_bed
 
@@ -254,7 +235,3 @@ def compress_sparse_matrix(matrix, file_path):
     
     # Remove the temporary uncompressed file
     os.remove(file_path)
-
-
-
-
