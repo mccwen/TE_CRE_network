@@ -29,19 +29,27 @@ row.names(peakinfo) <- peakinfo$site_name
 rownames(indata) <- row.names(features)
 colnames(indata) <- row.names(cellinfo)
 
-# get gene expression matrix
-g=subset(features, V3=="Gene Expression")
-colnames(g) <- c("gene_name", "expression", "chr", 'start', "end")
+# create a function to get correlation between target gene and enhancers
+gene_enhancer_corr <- function(features){
+  g_chr2=subset(features, (V3=="Gene Expression") &(V4=="chr2") & (V2=="Macrod2"))
+  p_chr2=subset(features, (V3=="Peaks") & (V4=="chr2"))
+  GEX=indata[rownames(g_chr2), ]
+  PEAKs=indata[rownames(p_chr2), ]
+  g_db=as.data.frame(as.matrix(GEX))
+  p_db=as.data.frame(as.matrix(PEAKs))
+  chr_peaks_T=t(p_db)
 
-df <- tibble::rownames_to_column(g, "ID")
-write.csv(df, "genes_IDs_genome_locations.csv", row.names = FALSE)
+  peaks_of_Macrod2=cbind(g_db, chr_peaks_T)
+  coefficients=cor(peaks_of_Macrod2[-1], peaks_of_Macrod2$Macrod2_exp)
+  coe_db=as.data.frame(coefficients)
+  colnames(coe_db) <- "coeff"
+  coe_db <- tibble::rownames_to_column(coe_db, "peak")
+  sig_coe=coe_db[coe_db$coeff >=0.15, ]
+  # drop NA rows
+  complete_dat<- sig_coe[complete.cases(sig_coe), ]
+  write.csv(complete_dat, "results/enhancers_corr_gt0.15_with_Macrod2.csv")
+}
 
-GEX=indata[rownames(g), ]
-# save gene expression matrix to a sparse matrix
-writeMM(obj = GEX, file="gene_expression_matrix.mtx")
-# save genes and cell barcode names
-write(x = rownames(GEX), file = "genes.tsv")
-write(x = colnames(GEX), file = "barcodes.tsv")
 
 # only use rows that are peaks
 new_indata <- indata[peaks_only, ]
