@@ -16,7 +16,7 @@ names(cellinfo) <- "cells"
 features=read.table("filtered_feature_bc_matrix/features.tsv.gz", header=F,
                     row.names=1, sep="\t")
 peaks_only <- rownames(features)[features$V3 =="Peaks"]
-gene_only <- rownames(features)[features$V3== "Gene Expression"]
+
 #Format peak info
 peakinfo <- read.table("filtered_feature_bc_matrix/peaks.bed")
 names(peakinfo) <- c("chr", "bp1", "bp2")
@@ -28,6 +28,14 @@ row.names(peakinfo) <- peakinfo$site_name
 rownames(indata) <- row.names(features)
 colnames(indata) <- row.names(cellinfo)
 
+# get gene expression matrix
+g=subset(features, V3=="Gene Expression")
+GEX=indata[rownames(g), ]
+# save gene expression matrix to a sparse matrix
+writeMM(obj = GEX, file="gene_expression_matrix.mtx")
+# save genes and cell barcode names
+write(x = rownames(GEX), file = "genes.tsv")
+write(x = colnames(GEX), file = "barcodes.tsv")
 
 # only use rows that are peaks
 new_indata <- indata[peaks_only, ]
