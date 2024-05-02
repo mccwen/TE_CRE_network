@@ -3,6 +3,7 @@ setwd("/Users/ming-chingwen/Documents/bioinformatics/umich/courses/Winter2024/bi
 library(monocle3)
 library(cicero)
 library(Matrix)
+library(tibble)
 
 indata <- readMM("filtered_feature_bc_matrix/matrix.mtx.gz")
 # binarize the matrix
@@ -30,6 +31,11 @@ colnames(indata) <- row.names(cellinfo)
 
 # get gene expression matrix
 g=subset(features, V3=="Gene Expression")
+colnames(g) <- c("gene_name", "expression", "chr", 'start', "end")
+
+df <- tibble::rownames_to_column(g, "ID")
+write.csv(df, "genes_IDs_genome_locations.csv", row.names = FALSE)
+
 GEX=indata[rownames(g), ]
 # save gene expression matrix to a sparse matrix
 writeMM(obj = GEX, file="gene_expression_matrix.mtx")
