@@ -1,5 +1,7 @@
 The workflow of the pipeline include the following steps:
 1. Calculate co-accessibility between enhancers of a given gene
+   1.1) Get enhancers that are highly correlations with the target gene
+   1.2) Get enhancers that are highly correlated with each other (high co-accessibility) on the same chromosome of the target gene
 2. Restructure the format of the file that contains significant enhancers of the target gene
 3. Construct a network of highly correlated enhancers of the target gene
 4. TE intersection with significant enhancer sequences of the target gene
