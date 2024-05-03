@@ -3,12 +3,19 @@ import sys
  
 # setting path
 sys.path.append('..')
-import steamer as st
+import steamer_enhancer as se
+import network_visualization.py as nv
 import pandas as pd
 #from pybedtools import BedTool
 from fuc import pybed
 
-
+# Test if the significant enhancers file contains enhancers with the minimum co-accessibility scores set by the network_visualization.py
+def test_coaccessibility_for_network_visualzation():
+	test_input="test/data/test_sig_enhancer.csv"
+	coaccess=pd.read_csv(test_input)["coaccess"]
+	min_coaccess_score=min(coaccess)
+	min_high_corr=0.55
+	assert(min_coaccess_score > min_high_corr, f"min coaccess score in the file greater than the min score set in network_visualization, got: {min_coaccess_scor}")
 # Test the first function in steamer
 def test_create_bed_for_TEs():
 	test_input="test_data/test.tsv"
@@ -21,7 +28,7 @@ def test_create_bed_for_TEs():
 # Test the second function in steamer
 def test_create_bed_for_fragments():
 	test_sample="test_data/test_sample.tsv"
-	result=st.create_bed_for_fragments(test_sample)
+	result=se.create_bed_for_fragments(test_sample)
 	expected_result=pd.read_csv("test_data/test_sample.bed", sep="\t")
 	expected_bf=pybed.BedFrame.from_frame(meta=[], data=expected_result)
 	#expected_bf = pybed.BedFrame.from_frame([],expected_result)
