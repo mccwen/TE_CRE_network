@@ -18,10 +18,10 @@ Activity 3: Design and write unittest
 
 • Activity 4: Write a R script for constructing enhancer co-accessibility scores for a target gene
   - Task 4.1: Select a target gene
-  - Task 4.2: Find significant enhancers of the target gene using a 500kb sliding window
+  - Task 4.2: Find significant enhancers of the target gene using a R function "gene_enhancer_corr"
   - Task 4.3: Compute correlations between significant enhancers of the target gene using Cicero
-  - Task 4.4: Write a python function to take the output from Task 5.3 to sort the column names in order to run Task 5.5
-  - Task 4.5: Using the TE-CRE quantification script (see Activity 4) to intersect significant enhancers with TE sequences
+  - Task 4.4: In python, take the output from Tasks 4.2 and 4.3 to get significant enhancers that meet the criteria of Task 4.2 and 4.3
+  - Task 4.5: Using the TE-CRE quantification script (see Activity 6) to intersect significant enhancers with TE sequences
 
 • Activity 5: Write a Python script to construct a netwokr of highly correlated enhancers (subset of the output from Activity 4)
   - Task 5.1: A function to i) take the coaccess matrix as input, subset the matrix to get highly correlated enhancers, construct a network , 
