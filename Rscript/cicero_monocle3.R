@@ -29,7 +29,7 @@ row.names(peakinfo) <- peakinfo$site_name
 rownames(indata) <- row.names(features)
 colnames(indata) <- row.names(cellinfo)
 
-# create a function to get correlation between target gene and enhancers
+# create a function to get highly correlated enhancers of target gene
 gene_enhancer_corr <- function(features){
   g_chr2=subset(features, (V3=="Gene Expression") &(V4=="chr2") & (V2=="Macrod2"))
   p_chr2=subset(features, (V3=="Peaks") & (V4=="chr2"))
@@ -38,17 +38,20 @@ gene_enhancer_corr <- function(features){
   g_db=as.data.frame(as.matrix(GEX))
   p_db=as.data.frame(as.matrix(PEAKs))
   chr_peaks_T=t(p_db)
-
   peaks_of_Macrod2=cbind(g_db, chr_peaks_T)
-  coefficients=cor(peaks_of_Macrod2[-1], peaks_of_Macrod2$Macrod2_exp)
+  coefficients=cor(peaks_of_Macrod2[-1], peaks_of_Macrod2$V1)
   coe_db=as.data.frame(coefficients)
   colnames(coe_db) <- "coeff"
   coe_db <- tibble::rownames_to_column(coe_db, "peak")
   sig_coe=coe_db[coe_db$coeff >=0.15, ]
   # drop NA rows
   complete_dat<- sig_coe[complete.cases(sig_coe), ]
-  write.csv(complete_dat, "results/enhancers_corr_gt0.15_with_Macrod2.csv")
+  return(complete_dat)
+  #write.csv(complete_dat, "results/enhancers_corr_gt0.15_with_Macrod2.csv")
 }
+
+res=gene_enhancer_corr(features)
+write.csv(res, "results/enhancers_corr_gt0.15_with_Macrod2.csv", row.names = FALSE)
 
 
 # only use rows that are peaks
