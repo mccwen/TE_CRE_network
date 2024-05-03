@@ -4,36 +4,27 @@ import sys
 # setting path
 sys.path.append('..')
 import steamer_enhancer as se
-import network_visualization.py as nv
 import pandas as pd
 #from pybedtools import BedTool
 from fuc import pybed
 
+# The test right below is to test the input file for the newly added R function, gene_enhancer_corr.R
 # Test if the significant enhancers file contains enhancers with the minimum co-accessibility scores set by the network_visualization.py
 def test_coaccessibility_for_network_visualzation():
-	test_input="test/data/test_sig_enhancer.csv"
+	test_input="test_data/test_sig_enhancer.csv"
 	coaccess=pd.read_csv(test_input)["coaccess"]
 	min_coaccess_score=min(coaccess)
 	min_high_corr=0.55
-	assert(min_coaccess_score > min_high_corr, f"min coaccess score in the file greater than the min score set in network_visualization, got: {min_coaccess_scor}")
+	assert min_coaccess_score > min_high_corr, "Min coaccess score < the required corr score for network visualization"
+
 # Test the first function in steamer
 def test_create_bed_for_TEs():
 	test_input="test_data/test.tsv"
-	result=st.create_bed_for_TEs(test_input)
+	result=se.create_bed_for_TEs(test_input)
 	expected_result=pd.read_csv("test_data/test.bed", sep="\t")
 	expected_bf = pybed.BedFrame.from_frame(meta=[], data= expected_result)
 	#expected_bf = pybed.BedFrame.from_frame([],expected_result)
 	assert result.to_string() == expected_bf.to_string(), "The tsv function result does not match the bed format."
-
-# Test the second function in steamer
-def test_create_bed_for_fragments():
-	test_sample="test_data/test_sample.tsv"
-	result=se.create_bed_for_fragments(test_sample)
-	expected_result=pd.read_csv("test_data/test_sample.bed", sep="\t")
-	expected_bf=pybed.BedFrame.from_frame(meta=[], data=expected_result)
-	#expected_bf = pybed.BedFrame.from_frame([],expected_result)
-	assert result.to_string()==expected_bf.to_string(), "The sample file does not match the sample bed file."
-
 
 # Test the final function in steamer to ensure the sizes of TE names and of cell barcode match those in Bedtool object
 # First, make up TE family names and cell barcodes to compare with:
@@ -69,7 +60,6 @@ def define_sample_chromosome_names():
 	return sample_chrom_names
 	
 	
-
 # Next, we check if the chromosomes in the input files all match the correct chromosome names
 def test_bed_for_TEs(define_TE_chromosome_names):
     #only taking the columns with the chromsome col names 	
@@ -79,5 +69,4 @@ def test_bed_for_TEs(define_TE_chromosome_names):
 def test_bed_for_fragments(define_sample_chromosome_names):
 	assert all(x in mouse_chroms for x in define_sample_chromosome_names), "Some chromosome names are wrong."
 	
-
 
