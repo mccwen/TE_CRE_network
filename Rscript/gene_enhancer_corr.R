@@ -1,7 +1,7 @@
 # create a function to get correlation between target gene and enhancers
-gene_enhancer_corr <- function(features){
-  g_chr2=subset(features, (V3=="Gene Expression") &(V4=="chr2") & (V2=="Macrod2"))
-  p_chr2=subset(features, (V3=="Peaks") & (V4=="chr2"))
+gene_enhancer_corr <- function(features, chrom, gene_name){
+  g_chr2=subset(features, (V3=="Gene Expression") &(V4==chrom) & (V2==gene_name))
+  p_chr2=subset(features, (V3=="Peaks") & (V4==chrom))
   GEX=indata[rownames(g_chr2), ]
   PEAKs=indata[rownames(p_chr2), ]
   g_db=as.data.frame(as.matrix(GEX))
