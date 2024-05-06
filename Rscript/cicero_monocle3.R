@@ -50,7 +50,7 @@ colnames(indata) <- row.names(cellinfo)
 #  #write.csv(complete_dat, "results/enhancers_corr_gt0.15_with_Macrod2.csv")
 #}
 
-res=gene_enhancer_corr(features)
+res=gene_enhancer_corr(features, "chr2", "Macrod2")
 write.csv(res, "results/enhancers_corr_gt0.15_with_Macrod2.csv", row.names = FALSE)
 
 
