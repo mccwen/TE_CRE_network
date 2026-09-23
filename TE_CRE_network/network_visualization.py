@@ -3,7 +3,7 @@ import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
 
-def network_polt(filename, min_high_corr):
+def network_plot(filename, min_high_corr):
     db=pd.read_csv(filename)
     # select only highly correlated enhancers for visualization
     sub_db=db[db["coaccess"] > min_high_corr]
