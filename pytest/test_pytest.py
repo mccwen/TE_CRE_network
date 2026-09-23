@@ -1,72 +1,75 @@
-import pytest
-import sys
- 
-# setting path
-sys.path.append('..')
-import steamer_enhancer as se
+from pathlib import Path
+import random
+
 import pandas as pd
-#from pybedtools import BedTool
 from fuc import pybed
+from pybedtools import BedTool
 
-# The test right below is to test the input file for the newly added R function, gene_enhancer_corr.R
-# Test if the significant enhancers file contains enhancers with the minimum co-accessibility scores set by the network_visualization.py
-def test_coaccessibility_for_network_visualzation():
-	test_input="test_data/test_sig_enhancer.csv"
-	coaccess=pd.read_csv(test_input)["coaccess"]
-	min_coaccess_score=min(coaccess)
-	min_high_corr=0.55
-	assert min_coaccess_score > min_high_corr, "Min coaccess score < the required corr score for network visualization"
+from TE_CRE_network import steamer_enhancer as se
 
-# Test the first function in steamer
-def test_create_bed_for_TEs():
-	test_input="test_data/test.tsv"
-	result=se.create_bed_for_TEs(test_input)
-	expected_result=pd.read_csv("test_data/test.bed", sep="\t")
-	expected_bf = pybed.BedFrame.from_frame(meta=[], data= expected_result)
-	#expected_bf = pybed.BedFrame.from_frame([],expected_result)
-	assert result.to_string() == expected_bf.to_string(), "The tsv function result does not match the bed format."
 
-# Test the final function in steamer to ensure the sizes of TE names and of cell barcode match those in Bedtool object
-# First, make up TE family names and cell barcodes to compare with:
-TE_fam=pd.read_csv("test_data/test_TE_barcode.csv").loc[:, "TE"]
-barcodes=pd.read_csv("test_data/test_TE_barcode.csv").loc[:, "barcode"]
+DATA_DIR = Path(__file__).resolve().parent / "test_data"
 
-def test_make_cell_x_element_matrix():
-	intersect_db=pd.read_csv("test_data/test_BEDintersection_data.bed", sep="\t", header=None)
-	intersect_db=intersect_db.rename(columns={0: "Chromosome", 1: "Start", 2: "End", 3: "TE_family", 4: "Strand", 5: "Chromosome_r", 
-                         6: "Start_r", 7: "End_r", 8: "barcode"})
 
-	TEs_from_intersetc=intersect_db.loc[:, "TE_family"]
-	barcode_from_intersect=intersect_db.loc[:, "barcode"]
-	assert TEs_from_intersetc.equals(other=TE_fam) & barcode_from_intersect.equals(other=barcodes)
-	
+def test_get_enhancers_parses_cicero_peak_pairs():
+    result = se.get_enhancers(DATA_DIR / "test_sig_enhancer.csv")
 
-# The tests below serves as egde cases to check if chromosome names in the input TE file are in the right range.
-# First, we define correct chromosome names
-mouse_chroms=["chr"+str(i) for i in range(1, 20)]
-#chroms=map(range(1:19): lambda x: "chr"+str(x))
-mouse_chroms.extend(["chrX", "chrY"])
+    assert list(result.columns) == ["chr", "start_position", "end_position"]
+    assert len(result) == 10
+    assert set(result["chr"]) == {"chr2"}
+    assert pd.api.types.is_integer_dtype(result["start_position"])
+    assert pd.api.types.is_integer_dtype(result["end_position"])
+    assert (result["start_position"] < result["end_position"]).all()
 
-@pytest.fixture
-def define_TE_chromosome_names():
-	chrom_names=pd.read_csv("test_data/test.tsv", sep="\t").iloc[:, 0]
-	return chrom_names
-	
 
-@pytest.fixture
-def define_sample_chromosome_names():
-	#ch_list=[]
-	sample_chrom_names=	pd.read_csv("test_data/test_sample.tsv", sep="\t").iloc[:, 0]
-	return sample_chrom_names
-	
-	
-# Next, we check if the chromosomes in the input files all match the correct chromosome names
-def test_bed_for_TEs(define_TE_chromosome_names):
-    #only taking the columns with the chromsome col names 	
-    assert all(x in mouse_chroms for x in define_TE_chromosome_names)
-	
-# The same check for the input sample file
-def test_bed_for_fragments(define_sample_chromosome_names):
-	assert all(x in mouse_chroms for x in define_sample_chromosome_names), "Some chromosome names are wrong."
-	
+def test_create_bed_for_tes_normalizes_coordinates(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    result = se.create_bed_for_TEs(DATA_DIR / "test.tsv")
 
+    expected = pd.read_csv(DATA_DIR / "test.bed", sep="\t")
+    expected_bed = pybed.BedFrame.from_frame(meta=[], data=expected)
+
+    assert result.to_string() == expected_bed.to_string()
+    assert (tmp_path / "TEs.bed").is_file()
+
+
+def test_get_nearby_enhancers_filters_chromosome_and_window(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    random.seed(2017)
+    enhancers = pd.DataFrame(
+        {
+            "chr": ["chr2", "chr2", "chr1"],
+            "start_position": [100, 2_000_000, 100],
+            "end_position": [200, 2_000_100, 200],
+        }
+    )
+
+    _, barcodes = se.get_nearby_enhancers(enhancers, "chr2", 150, 175)
+
+    assert len(barcodes) == 1
+    assert barcodes.str.fullmatch(r"[A-Za-z0-9]{10}").all()
+    fragment_path = tmp_path / "Frag.bed"
+    assert fragment_path.is_file()
+    fields = fragment_path.read_text().strip().split("\t")
+    assert fields[:3] == ["chr2", "100", "200"]
+    assert fields[3] == barcodes.iloc[0]
+
+
+def test_make_cell_x_element_matrix_uses_intersection_data():
+    intersection_path = DATA_DIR / "test_BEDintersection_data.bed"
+    expected = pd.read_csv(DATA_DIR / "test_TE_barcode.csv")
+
+    unique_table, family_table, unique_index, family_index, barcode_index = (
+        se.make_cell_x_element_matrix(
+            BedTool(str(intersection_path)),
+            expected["barcode"],
+        )
+    )
+
+    assert list(family_index) == expected["TE"].tolist()
+    assert list(barcode_index) == expected["barcode"].tolist()
+    assert len(unique_index) == len(expected)
+    assert unique_table["data"].sum() == len(expected)
+    assert family_table["data"].sum() == len(expected)
+    assert len(unique_table) == len(expected)
+    assert len(family_table) == len(expected)

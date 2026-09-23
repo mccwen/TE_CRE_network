@@ -1,22 +1,44 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "TE_CRE_network"
 version = "0.0.1"
 authors = [
-  { name="Crystal Wen", email="mccwen@umich.edu" },
+  { name = "Crystal Wen", email = "mccwen@umich.edu" },
 ]
-description = "TE_CRE_network package"
+description = "Identify co-accessible regulatory elements and quantify overlapping transposable elements"
 readme = "README.md"
 requires-python = ">=3.8"
+license = { file = "LICENSE" }
+dependencies = [
+  "numpy>=1.24,<2",
+  "pandas>=2.0,<3",
+  "scipy>=1.10,<2",
+  "pybedtools>=0.9",
+  "fuc",
+  "matplotlib>=3.7",
+  "networkx>=3.0",
+]
 classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
 ]
 
-[tool.setuptools]
-packages = ["TE_CRE_network"]
-py-modules = ["steamer_enhancer"] # dash, not underscore
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[project.urls]
+Repository = "https://github.com/mccwen/TE_CRE_network"
+Issues = "https://github.com/mccwen/TE_CRE_network/issues"
+
+[tool.setuptools.packages.find]
+include = ["TE_CRE_network*"]
+
+[tool.pytest.ini_options]
+testpaths = ["pytest"]
+addopts = "-ra"

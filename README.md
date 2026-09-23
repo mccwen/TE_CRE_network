@@ -1,12 +1,151 @@
-# TE_CRE_network
+# TE-CRE Network
 
-1. Steamer
-The core of the this pipeline is _steamer_ which was developed by the Welch lab at University of Michigan and is used to qnautification of TE counts per cell.
+TE-CRE Network is a research workflow for identifying co-accessible candidate
+cis-regulatory elements near a target gene and quantifying the transposable
+elements that overlap those regions.
 
-The example here is to use a mouse TE annotation database which can be downloaded from here: https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/. 
+The project combines:
 
-The pipeline, _steamer_,  takes two input files: 1) fragmemt.tsv from single nucleus ATAC-seq and 2) annotated TE sequences in any text format. It outputs a cell-by-TE count matrix.
+1. Gene-peak correlation and peak co-accessibility analysis with Monocle 3 and Cicero.
+2. Transposable-element overlap and matrix generation with Python, BEDTools, and pybedtools.
+3. Optional enhancer-network visualization.
 
-2. Cicero-monocle3: This R script is to calcuate co-accessibility scores betwween enhancers of a target gene. The example output from this script contains co-accessibility score between any two peaks and can be found in the example_data folder. 
+> **Status:** This repository is a research prototype developed using a mouse
+> brain single-cell multiome dataset. Validate genome builds, annotations, and
+> thresholds before applying it to another dataset.
 
+## Workflow
 
+```text
+10x multiome matrix
+        |
+        v
+Gene-peak correlations and Cicero co-accessibility
+        |
+        v
+Nearby co-accessible enhancer intervals
+        |
+        v
+Intersection with Dfam TE annotations
+        |
+        v
+TE-family and TE-instance matrices
+```
+
+## Repository structure
+
+```text
+Rscript/cicero_monocle3.R          Cicero command-line workflow
+TE_CRE_network/steamer_enhancer.py TE overlap and matrix functions
+TE_CRE_network/network_visualization.py
+example_data/                      Example Cicero output
+pytest/                            Tests and small fixtures
+tutorials/TE_quant.ipynb           Executable TE-quantification tutorial
+datasets.md                        Dataset description and sources
+```
+
+## Installation
+
+The Python stage requires Python 3.8 or newer and BEDTools on `PATH`. A Conda
+environment is recommended:
+
+```bash
+conda create -n te-cre -c conda-forge -c bioconda python=3.11 bedtools pip
+conda activate te-cre
+python -m pip install -e ".[test]"
+bedtools --version
+```
+
+The R stage requires `optparse`, `Matrix`, `monocle3`, `cicero`, and
+`SingleCellExperiment`; `rtracklayer` is needed only for annotated connection
+plots. Follow the official [Monocle 3 installation instructions](https://cole-trapnell-lab.github.io/monocle3/docs/installation/)
+and install its compatible Cicero branch with:
+
+```r
+install.packages(c("optparse", "remotes"))
+remotes::install_github("cole-trapnell-lab/cicero-release", ref = "monocle3")
+```
+
+The workflow was tested locally with Monocle 3 1.3.6 and Cicero 1.3.9 from
+the `monocle3` branch.
+
+## Inputs
+
+### Cicero stage
+
+`Rscript/cicero_monocle3.R` expects a matrix directory containing:
+
+```text
+matrix.mtx.gz
+barcodes.tsv.gz
+features.tsv.gz
+peaks.bed
+```
+
+For gene-peak correlation, `features.tsv.gz` must contain a fourth column with
+the chromosome for every feature. Standard 10x feature files generally contain
+only three columns, so this annotation must be added during input preparation.
+
+All coordinates, annotations, chromosome names, and genome-size files must use
+the same genome build.
+
+### TE-quantification stage
+
+The tutorial requires a Cicero CSV containing `Peak1`, `Peak2`, and `coaccess`,
+a Dfam `*.nrph.hits` or `*.nrph.hits.gz` annotation, and BEDTools. The mm10
+annotation is available from [Dfam](https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/)
+and is intentionally not stored in this repository.
+
+## Run Cicero
+
+This example uses an mm10 chromosome-sizes file because the example TE
+annotation uses mm10 coordinates:
+
+```bash
+Rscript Rscript/cicero_monocle3.R \
+  --matrix-dir path/to/filtered_feature_bc_matrix \
+  --output-dir results/cicero \
+  --target-gene Macrod2 \
+  --chromosome chr2 \
+  --gene-correlation-threshold 0.15 \
+  --coaccessibility-threshold 0.20 \
+  --sample-num 100 \
+  --seed 2017 \
+  --genome path/to/mm10.chrom.sizes
+```
+
+Use `mouse.mm9` only when every input and annotation uses the mm9 build. Run
+`Rscript Rscript/cicero_monocle3.R --help` for all options.
+
+## Run TE quantification
+
+Place the Dfam annotation in the repository root or set its location explicitly:
+
+```bash
+export TE_ANNOTATION=/path/to/mm10.nrph.hits.gz
+jupyter lab tutorials/TE_quant.ipynb
+```
+
+The tutorial uses `example_data/chr2_coaccess_score_gt0.2.csv` and writes
+10x-compatible TE-family and unique-TE matrices under `results/TE_quant/`.
+
+## Tests
+
+```bash
+python -m pytest -q
+```
+
+## Limitations
+
+- This is a research prototype, not a clinical or production pipeline.
+- The current example is mouse-specific, and genome builds must not be mixed.
+- The Dfam parser expects the documented `nrph.hits` column organization.
+- Enhancer barcodes generated by the tutorial are synthetic identifiers.
+- The R and Python stages are currently run separately.
+
+## Attribution and license
+
+The TE-processing module was adapted from work developed in the Welch Lab at
+the University of Michigan, with modifications for this project. Cicero and
+Monocle 3 are maintained by the Cole-Trapnell Lab. This project is distributed
+under the [MIT License](LICENSE).
