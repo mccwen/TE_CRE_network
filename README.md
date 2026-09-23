@@ -52,7 +52,7 @@ environment is recommended:
 ```bash
 conda create -n te-cre -c conda-forge -c bioconda python=3.11 bedtools pip
 conda activate te-cre
-python -m pip install -e ".[test]"
+python -m pip install -e ".[test,notebook]"
 bedtools --version
 ```
 

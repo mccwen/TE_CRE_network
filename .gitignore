@@ -158,3 +158,19 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# macOS metadata
+.DS_Store
+
+# Large local reference annotations
+/mm10.nrph.hits
+/mm10.nrph.hits.gz
+
+# Generated workflow outputs
+/results/
+/TE_CRE_network/results/
+/Frag.bed
+/TEs.bed
+/intersected_bed.bed
+/example_data/Frag.bed
+/highly_correlated_enhancer_network_coaccess.png

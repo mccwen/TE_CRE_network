@@ -1,17 +1,78 @@
-Transposable elements (TEs) play a crucial role in altering/regulating gene expression. One of the ways they use is to act as enhancers. This pipeline aims to answer whether 1) highly correlated enhancers related to a given gene form a network/ networks and 2) more importantly, whether these correlated enhancers are driven by TEs (i.e., overlapped with TEs).
+# Example data and required inputs
 
-The testing dataset is a small mouse brain single-cell multiome dataset (221.2 MB) and can be downloaded from 10X Genomics website (https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0). Key metrics of the dataset can be found on the website. The advantages of using this dataset for pipeline demostration include its relatively small size and the availablility of both gene and ATAC information in the same cells. 
+## Biological question
 
-We will use the processed data for testing the pipeline. Information about cell barcodes, features (gene names and locations, as well as peak locations) can be found in the folder named "filtered_feature_bc_matrix". Specifically, 
+Transposable elements (TEs) can influence gene regulation by overlapping or
+contributing sequence to cis-regulatory elements. This workflow asks whether
+co-accessible candidate regulatory elements near a target gene overlap
+annotated TEs and, if so, which TE families or genomic TE instances are
+represented.
 
-1) snATAC fragments that passed quality contorl can be found in the file named e18_mouse_brain_fresh_5k_atac_fragments.tsv.gz that comprises 4880 cells. Quality fragments will be one of the input.
-   
-2) To study genes of interest, there are a total of 32245 different genes present in this dataset to choose from. Gene information can be found in the file named "features.tsv.gz".
-  
-3) ATAC peak locations are stored in a file named "peaks.bed" that contains 144437 peaks and is provided on the same website also.
-   
-The first part of the pipeline which is a R script will need 1) and 3) to calculate co-accessibility scores between any pair of peaks (enhancers), and then use a subset of the data for testing (e.g., only looking at one or a few of genes of interest), while the second part of the pipeline will take the output from the first part and quantify TEs of these enhancers.  
+## Example multiome dataset
 
-Another input file for the second part of the pipeline is a text file of mouse TE consesnsus sequences that contains 1369 different TE families and their genomic coordinates. The TE annotation file can be downloaded from Dfam (https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/) will be another input file.
+The example is based on the 10x Genomics
+[Fresh Embryonic E18 Mouse Brain 5k single-cell multiome dataset](https://www.10xgenomics.com/datasets/fresh-embryonic-e-18-mouse-brain-5-k-1-standard-1-0-0).
+The paired gene-expression and chromatin-accessibility measurements make the
+dataset suitable for demonstrating gene-peak correlation and peak
+co-accessibility analysis.
 
+The repository does not redistribute the complete 10x dataset. Download the
+processed data from 10x Genomics and prepare a matrix directory containing:
 
+| File | Purpose |
+| --- | --- |
+| `matrix.mtx.gz` | Sparse gene-expression and peak-accessibility matrix |
+| `barcodes.tsv.gz` | Cell barcodes |
+| `features.tsv.gz` | Feature identifiers, names, types, and chromosome annotation |
+| `peaks.bed` | Genomic coordinates of ATAC-seq peaks |
+
+The Cicero script requires a fourth column in `features.tsv.gz` containing the
+chromosome for each feature. Standard 10x feature files generally contain only
+three columns, so this chromosome annotation must be added during input
+preparation.
+
+## Stage 1: gene-peak correlation and Cicero co-accessibility
+
+`Rscript/cicero_monocle3.R` uses the matrix directory to:
+
+1. Calculate correlations between the target gene and peaks on the requested
+   chromosome.
+2. Construct a Monocle 3 representation of the peak-accessibility matrix.
+3. Calculate Cicero co-accessibility scores.
+4. Save all connections and a threshold-filtered connection table.
+
+The example filtered table stored in this repository is:
+
+```text
+example_data/chr2_coaccess_score_gt0.2.csv
+```
+
+## Stage 2: TE intersection and quantification
+
+The TE-quantification tutorial uses:
+
+1. A Cicero CSV containing `Peak1`, `Peak2`, and `coaccess`.
+2. A target chromosome and genomic interval.
+3. A Dfam mouse TE annotation in `nrph.hits` or `nrph.hits.gz` format.
+4. BEDTools for genomic interval intersection.
+
+The mm10 Dfam annotation is available from:
+
+<https://www.dfam.org/releases/Dfam_3.8/annotations/mm10/>
+
+The large Dfam annotation is intentionally excluded from Git. The tutorial
+accepts a local annotation in the repository root or a path supplied through
+the `TE_ANNOTATION` environment variable.
+
+The tutorial writes TE-family and unique-TE matrices under:
+
+```text
+results/TE_quant/
+```
+
+## Genome-build consistency
+
+The 10x peak coordinates, feature annotations, chromosome-sizes file, target
+interval, and Dfam TE annotations must all use the same genome build. The
+documented TE-quantification example uses mm10. Use Cicero's built-in
+`mouse.mm9` genome only when every other input also uses mm9 coordinates.

@@ -31,6 +31,12 @@ classifiers = [
 
 [project.optional-dependencies]
 test = ["pytest>=7"]
+notebook = [
+  "jupyterlab>=4",
+  "nbformat>=5",
+  "nbconvert>=7",
+  "ipykernel>=6",
+]
 
 [project.urls]
 Repository = "https://github.com/mccwen/TE_CRE_network"
